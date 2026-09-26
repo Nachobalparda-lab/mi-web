@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>60 años en Búzios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <span class="nav-brand">Búzios 2027</span>
+      <div class="nav-links">
+        <a href="#portada">Inicio</a>
+        <a href="#resumen">Resumen</a>
+        <a href="#dia-a-dia">Día a día</a>
+        <a href="#reservas">Reservas</a>
+        <a href="#extras">Extras</a>
+      </div>
+    </div>
+  </nav>
+
+  <header id="portada" class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content" id="hero-content">
+      <p class="hero-loading">Cargando viaje...</p>
+    </div>
+  </header>
+
+  <main>
+
+    <section id="resumen" class="section">
+      <h2 class="section-title">Resumen del viaje</h2>
+      <p class="section-subtitle">Un pantallazo de cada día</p>
+      <div id="summary-cards" class="cards-grid"></div>
+    </section>
+
+    <section id="cumpleanos" class="section birthday-section">
+      <div id="birthday-highlight"></div>
+    </section>
+
+    <section id="dia-a-dia" class="section">
+      <h2 class="section-title">Día a día</h2>
+      <p class="section-subtitle">El detalle completo de las actividades</p>
+      <div id="days-detail"></div>
+    </section>
+
+    <section id="reservas" class="section alt-bg">
+      <h2 class="section-title">Reservas</h2>
+      <p class="section-subtitle">Vuelos, traslados, alojamiento y restaurantes</p>
+      <div id="reservations-content"></div>
+    </section>
+
+    <section id="extras" class="section">
+      <h2 class="section-title">Extras</h2>
+      <p class="section-subtitle">Para tener a mano durante el viaje</p>
+      <div id="extras-content"></div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Hecho con cariño para festejar los 60 años de Papá 🎉</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
