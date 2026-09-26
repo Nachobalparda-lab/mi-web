@@ -1,0 +1,582 @@
+/* ===== Variables ===== */
+:root {
+  --ocean-deep: #073b4c;
+  --ocean: #118ab2;
+  --teal: #06a89d;
+  --sand: #fdf6ec;
+  --sand-dark: #f2e4cc;
+  --sunset: #ff9f1c;
+  --sunset-dark: #e0720a;
+  --gold: #ffd166;
+  --text-dark: #1f2d33;
+  --text-light: #ffffff;
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(7, 59, 76, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-dark);
+  background: var(--sand);
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Playfair Display', serif;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+/* ===== Navbar ===== */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(7, 59, 76, 0.95);
+  backdrop-filter: blur(6px);
+}
+
+.navbar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.nav-brand {
+  color: var(--gold);
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.5px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.nav-links a {
+  color: var(--text-light);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.nav-links a:hover {
+  opacity: 1;
+  color: var(--gold);
+}
+
+/* ===== Hero / Portada ===== */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 20px;
+  background: linear-gradient(160deg, var(--ocean-deep) 0%, var(--ocean) 55%, var(--teal) 100%);
+  overflow: hidden;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 209, 102, 0.18), transparent 45%),
+    radial-gradient(circle at 80% 75%, rgba(255, 159, 28, 0.18), transparent 45%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+  color: var(--text-light);
+}
+
+.hero-loading {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.hero-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 0.85rem;
+  color: var(--gold);
+  margin-bottom: 18px;
+  font-weight: 500;
+}
+
+.hero-title {
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2.2vw, 1.3rem);
+  font-weight: 300;
+  opacity: 0.92;
+  margin-bottom: 28px;
+}
+
+.hero-dates {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  margin-bottom: 34px;
+}
+
+.hero-travelers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.traveler-chip {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 7px 16px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+.traveler-chip strong {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* ===== Sections ===== */
+.section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 80px 20px 40px;
+}
+
+.alt-bg {
+  background: var(--sand-dark);
+  max-width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.alt-bg > * {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-title {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  color: var(--ocean-deep);
+  text-align: center;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: #5c6b71;
+  margin-top: 8px;
+  margin-bottom: 40px;
+  font-weight: 300;
+}
+
+/* ===== Resumen: tarjetas por día ===== */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.day-card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--teal);
+  transition: transform 0.2s ease;
+}
+
+.day-card:hover {
+  transform: translateY(-4px);
+}
+
+.day-card.is-birthday {
+  border-top-color: var(--sunset);
+  background: linear-gradient(180deg, #fffdf7 0%, #fff 100%);
+}
+
+.day-card-number {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--ocean);
+  font-weight: 600;
+}
+
+.day-card.is-birthday .day-card-number {
+  color: var(--sunset-dark);
+}
+
+.day-card-date {
+  font-size: 0.85rem;
+  color: #7a8a90;
+  margin-top: 2px;
+  margin-bottom: 10px;
+}
+
+.day-card-title {
+  font-size: 1.15rem;
+  margin-bottom: 8px;
+  color: var(--text-dark);
+}
+
+.day-card-places {
+  font-size: 0.9rem;
+  color: #5c6b71;
+  line-height: 1.5;
+}
+
+.day-card-badge {
+  display: inline-block;
+  margin-top: 12px;
+  background: var(--sunset);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+/* ===== Cumpleaños: destaque especial ===== */
+.birthday-section {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.birthday-box {
+  background: linear-gradient(135deg, var(--sunset) 0%, var(--sunset-dark) 100%);
+  border-radius: 24px;
+  padding: 46px 32px;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 20px 45px rgba(224, 114, 10, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.birthday-box::before {
+  content: "🎂";
+  position: absolute;
+  font-size: 8rem;
+  opacity: 0.12;
+  right: -10px;
+  top: -20px;
+}
+
+.birthday-box::after {
+  content: "🎉";
+  position: absolute;
+  font-size: 6rem;
+  opacity: 0.12;
+  left: -10px;
+  bottom: -20px;
+}
+
+.birthday-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ocean-deep);
+  background: var(--gold);
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+}
+
+.birthday-box h3 {
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.birthday-box p {
+  font-weight: 300;
+  max-width: 560px;
+  margin: 0 auto 6px;
+  position: relative;
+  z-index: 1;
+}
+
+.birthday-dinner {
+  margin-top: 26px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--radius);
+  padding: 18px 24px;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+}
+
+.birthday-dinner-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-bottom: 4px;
+}
+
+.birthday-dinner-time {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+/* ===== Día a día: detalle ===== */
+.day-block {
+  margin-bottom: 48px;
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.day-block.is-birthday {
+  border: 2px solid var(--sunset);
+}
+
+.day-block-header {
+  background: var(--ocean-deep);
+  color: #fff;
+  padding: 18px 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.day-block.is-birthday .day-block-header {
+  background: linear-gradient(135deg, var(--sunset-dark), var(--sunset));
+}
+
+.day-block-header h3 {
+  font-size: 1.3rem;
+}
+
+.day-block-header span {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.activity-list {
+  padding: 10px 26px 24px;
+}
+
+.activity {
+  display: flex;
+  gap: 18px;
+  padding: 16px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.activity:last-child {
+  border-bottom: none;
+}
+
+.activity.is-highlight {
+  background: #fff8ec;
+  margin: 0 -26px;
+  padding: 16px 26px;
+  border-radius: 10px;
+}
+
+.activity-time {
+  flex: 0 0 70px;
+  font-weight: 600;
+  color: var(--ocean);
+  font-size: 0.95rem;
+}
+
+.activity.is-highlight .activity-time {
+  color: var(--sunset-dark);
+}
+
+.activity-body h4 {
+  font-size: 1.02rem;
+  margin-bottom: 4px;
+  color: var(--text-dark);
+}
+
+.activity-body p {
+  margin: 0 0 8px;
+  font-size: 0.92rem;
+  color: #5c6b71;
+  line-height: 1.5;
+}
+
+.maps-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--teal);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.maps-link:hover {
+  text-decoration: underline;
+}
+
+/* ===== Reservas ===== */
+.reservation-group {
+  margin-bottom: 34px;
+}
+
+.reservation-group h3 {
+  font-size: 1.2rem;
+  color: var(--ocean-deep);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reservation-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.reservation-card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.reservation-card h4 {
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.reservation-card p {
+  margin: 0 0 6px;
+  font-size: 0.88rem;
+  color: #5c6b71;
+  line-height: 1.5;
+}
+
+.reservation-meta {
+  font-size: 0.8rem;
+  color: var(--ocean);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.reservation-code {
+  display: inline-block;
+  font-size: 0.75rem;
+  background: var(--sand-dark);
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-top: 6px;
+}
+
+/* ===== Extras ===== */
+.extras-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.extras-col h3 {
+  font-size: 1.15rem;
+  color: var(--ocean-deep);
+  margin-bottom: 16px;
+}
+
+.extra-item {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  margin-bottom: 12px;
+}
+
+.extra-item h4 {
+  font-size: 0.98rem;
+  margin-bottom: 4px;
+}
+
+.extra-item p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #5c6b71;
+  line-height: 1.5;
+}
+
+/* ===== Footer ===== */
+.footer {
+  text-align: center;
+  padding: 30px 20px;
+  background: var(--ocean-deep);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.85rem;
+}
+
+/* ===== Error state ===== */
+.error-message {
+  text-align: center;
+  color: #b3261e;
+  background: #fdecea;
+  border-radius: var(--radius);
+  padding: 20px;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 600px) {
+  .nav-links {
+    justify-content: center;
+    width: 100%;
+  }
+  .navbar-inner {
+    justify-content: center;
+  }
+  .activity {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .activity-time {
+    flex: none;
+  }
+}
