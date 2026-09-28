@@ -39,24 +39,26 @@ const EXTRA_CATEGORY_LABELS = {
   tip: "💡 Tips prácticos",
 };
 
-// ===== Render: Portada =====
-function renderHero(trip, travelers) {
-  const container = document.getElementById("hero-content");
+// Bandera de Brasil en SVG (no un emoji, para que se vea igual en todos los sistemas).
+const BRAZIL_FLAG_SVG = `
+  <svg class="brazil-flag" viewBox="0 0 30 21" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bandera de Brasil">
+    <rect width="30" height="21" fill="#009c3b"/>
+    <polygon points="15,2.5 28,10.5 15,18.5 2,10.5" fill="#ffdf00"/>
+    <circle cx="15" cy="10.5" r="5" fill="#002776"/>
+  </svg>
+`;
 
-  const travelerChips = travelers
-    .map(
-      (t) => `<div class="traveler-chip">${t.name}${t.role ? ` · <strong>${t.role}</strong>` : ""}</div>`
-    )
-    .join("");
+// ===== Render: Portada =====
+function renderHero(trip) {
+  const container = document.getElementById("hero-content");
 
   container.innerHTML = `
     <p class="hero-eyebrow">${trip.destination || ""}</p>
-    <h1 class="hero-title">${trip.title}</h1>
+    <h1 class="hero-title">${trip.title} ${BRAZIL_FLAG_SVG}</h1>
     <p class="hero-subtitle">${trip.subtitle || ""}</p>
     <div class="hero-dates">
       📅 ${capitalize(formatDayLabel(trip.start_date))} → ${capitalize(formatDayLabel(trip.end_date))}
     </div>
-    <div class="hero-travelers">${travelerChips}</div>
   `;
 }
 
@@ -68,11 +70,14 @@ function renderSummary(days) {
     .map(
       (day) => `
       <div class="day-card ${day.is_birthday ? "is-birthday" : ""}">
-        <div class="day-card-number">Día ${day.day_number}</div>
-        <div class="day-card-date">${capitalize(formatDayLabel(day.date))}</div>
-        <h3 class="day-card-title">${day.title}</h3>
-        <p class="day-card-places">${day.main_places || ""}</p>
-        ${day.is_birthday ? '<span class="day-card-badge">🎂 Cumpleaños</span>' : ""}
+        ${day.photo_url ? `<img class="day-card-photo" src="${day.photo_url}" alt="${day.title}" loading="lazy" />` : ""}
+        <div class="day-card-body">
+          <div class="day-card-number">Día ${day.day_number}</div>
+          <div class="day-card-date">${capitalize(formatDayLabel(day.date))}</div>
+          <h3 class="day-card-title">${day.title}</h3>
+          <p class="day-card-places">${day.main_places || ""}</p>
+          ${day.is_birthday ? '<span class="day-card-badge">🎂 Cumpleaños</span>' : ""}
+        </div>
       </div>
     `
     )
@@ -151,6 +156,20 @@ function renderDaysDetail(days, activitiesByDay) {
     .join("");
 }
 
+const ACTION_BUTTON_LABELS = {
+  vuelo: "Check-in",
+  alojamiento: "Ver reserva",
+};
+
+function renderActionButton(r) {
+  const label = ACTION_BUTTON_LABELS[r.category];
+  if (!label) return "";
+  if (r.action_url) {
+    return `<a class="action-btn" href="${r.action_url}" target="_blank" rel="noopener">${label}</a>`;
+  }
+  return `<span class="action-btn action-btn-disabled">Próximamente</span>`;
+}
+
 // ===== Render: Reservas =====
 function renderReservations(reservations) {
   const container = document.getElementById("reservations-content");
@@ -175,6 +194,7 @@ function renderReservations(reservations) {
             ${r.details ? `<p>${r.details}</p>` : ""}
             ${r.link ? `<a class="maps-link" href="${r.link}" target="_blank" rel="noopener">Ver más</a>` : ""}
             ${r.confirmation_number ? `<div class="reservation-code">Cód: ${r.confirmation_number}</div>` : ""}
+            ${renderActionButton(r)}
           </div>
         `
         )
@@ -228,27 +248,49 @@ function renderExtras(extras) {
   `;
 }
 
+// ===== Render: Mapa =====
+function renderMap(extras, reservations) {
+  const mapContainer = document.getElementById("trip-map");
+  if (typeof L === "undefined") {
+    mapContainer.innerHTML = '<p class="error-message">No se pudo cargar el mapa (Leaflet no disponible).</p>';
+    return;
+  }
+
+  const points = [
+    ...extras.filter((e) => e.lat && e.lng).map((e) => ({ name: e.title, lat: e.lat, lng: e.lng })),
+    ...reservations.filter((r) => r.lat && r.lng).map((r) => ({ name: r.title, lat: r.lat, lng: r.lng })),
+  ];
+
+  const center = points.length ? [points[0].lat, points[0].lng] : [-22.7469, -41.8817];
+  const map = L.map("trip-map").setView(center, 13);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  }).addTo(map);
+
+  points.forEach((p) => {
+    L.marker([p.lat, p.lng]).addTo(map).bindPopup(p.name);
+  });
+}
+
 // ===== Carga de datos e inicialización =====
 async function init() {
   try {
-    const [tripRes, travelersRes, daysRes, activitiesRes, reservationsRes, extrasRes] = await Promise.all([
+    const [tripRes, daysRes, activitiesRes, reservationsRes, extrasRes] = await Promise.all([
       client.from("trip_info").select("*").limit(1).single(),
-      client.from("travelers").select("*").order("order_index"),
       client.from("days").select("*").order("day_number"),
       client.from("activities").select("*").order("order_index"),
       client.from("reservations").select("*").order("order_index"),
       client.from("extras").select("*").order("order_index"),
     ]);
 
-    const firstError =
-      tripRes.error || travelersRes.error || daysRes.error || activitiesRes.error || reservationsRes.error || extrasRes.error;
+    const firstError = tripRes.error || daysRes.error || activitiesRes.error || reservationsRes.error || extrasRes.error;
 
     if (firstError) {
       throw firstError;
     }
 
     const trip = tripRes.data;
-    const travelers = travelersRes.data || [];
     const days = daysRes.data || [];
     const activities = activitiesRes.data || [];
     const reservations = reservationsRes.data || [];
@@ -260,7 +302,8 @@ async function init() {
       activitiesByDay[a.day_id].push(a);
     });
 
-    renderHero(trip, travelers);
+    renderHero(trip);
+    renderMap(extras, reservations);
     renderSummary(days);
     renderBirthdayHighlight(days, activitiesByDay);
     renderDaysDetail(days, activitiesByDay);
